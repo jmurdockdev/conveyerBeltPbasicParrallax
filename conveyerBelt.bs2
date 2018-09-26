@@ -1,0 +1,172 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+
+boxtime VAR Word
+gaptime VAR Word
+
+'Treated as the "Light sensitivity variable"
+time VAR Word
+
+numjams VAR Word
+jamduration VAR Word
+numblinks VAR Word
+
+jamDurationMapAddress VAR Word
+
+box1 VAR Word
+box2 VAR Word
+box3 VAR Word
+box4 VAR Word
+
+'' the time variable really just signifies is there is
+' is a box present or not
+' Writing in word increments: so 2 words at a time
+
+sensitivity VAR Word
+sensitivity = 500
+
+
+PAUSE 1000
+
+Start:
+DO
+   boxtime = 0
+   gaptime = 0
+   jamduration = 0
+   numblinks = 0
+
+   READ 10 , Word jamDurationMapAddress
+
+   HIGH 2
+   RCTIME 2,1, time
+   DEBUG HOME, "time =  " , DEC5 time, CR
+   'DEBUG DEC $7DC
+                                                              'the dubug outputs slow down counting loops FYI
+   IF time > sensitivity THEN                                        'claibrate light sensitivity for different rooms
+
+      DO
+          'PAUSE 1
+          boxtime = boxtime + 5
+          HIGH 2
+          RCTIME 2,1, time
+
+         ' DEBUG HOME , "time =  " , DEC5 time
+          'DEBUG DEC boxtime , CR
+          IF boxtime >= 5000 THEN
+
+              READ 8 , Word numjams
+              numjams = numjams + 1
+              WRITE 8, Word numjams
+              'update number of jams
+
+              DO
+                numblinks = numblinks + 1
+                LOW 13
+                PAUSE 100
+                HIGH 13
+                PAUSE 100
+              LOOP UNTIL IN0 = 1
+
+              jamduration = numblinks * 200
+              jamDurationMapAddress = jamDurationMapAddress + 2
+
+              WRITE 10, Word jamDurationMapAddress
+
+              'write at dynamically written location
+              WRITE jamDurationMapAddress, Word jamduration
+              'store jam duration
+
+              DEBUG CR, "jamduration = " , DEC jamduration , CR
+              DEBUG "jamDurationMapAddress = " , DEC jamDurationMapAddress, CR
+
+              GOTO Start
+
+          ENDIF
+
+      LOOP UNTIL time < sensitivity
+
+
+      '' LOGIC TO DEFINE AND STORE WHAT TYPE OF BOX IT IS
+      IF boxtime <= 1500 AND boxtime >=500 THEN
+          'STORE THE BOX TYPE1
+          READ 0, Word box1
+          box1 = box1 + 1
+          WRITE 0 , Word box1
+          DEBUG "Number of box1 is  " , DEC box1 , CR
+
+      ELSEIF boxtime > 1500 AND boxtime < 2500 THEN
+          'STORE THE BOX TYPE2
+          READ 2, Word box2
+          box2 = box2 + 1
+          WRITE 2 , Word box2
+          DEBUG "Number of box2 is  " , DEC box2 , CR
+
+      ELSEIF boxtime > 2500 AND boxtime < 3500 THEN
+          'STORE THE BOX TYPE3
+          READ 4, Word box3
+          box3 = box3 + 1
+          WRITE 4 , Word box3
+          DEBUG "Number of box3 is  " , DEC box3 , CR
+
+      ELSEIF boxtime > 3500 AND boxtime < 5000 THEN
+          'STORE THE BOX TYPE4
+          READ 6, Word box4
+          box4 = box4 + 1
+          WRITE 6 , Word box4
+          DEBUG "Number of box4 is  " , DEC box4 , CR
+
+      ENDIF
+
+
+    ELSE
+
+      'This is the state between boxes
+      ' so Lots of light is shining onto it
+
+      DO
+
+        gaptime = gaptime + 2
+        HIGH 2
+        RCTIME 2,1, time
+
+        IF gaptime >= 10000 THEN
+
+              READ 8 , Word numjams
+              numjams = numjams + 1
+              WRITE 8, Word numjams
+              'update number of jams
+
+              DO
+                numblinks = numblinks + 1
+                LOW 13
+                PAUSE 200
+                HIGH 13
+                PAUSE 100
+              LOOP UNTIL IN0 = 1
+
+              jamduration = numblinks * 300
+
+              jamDurationMapAddress = jamDurationMapAddress + 2
+
+              WRITE 10, Word jamDurationMapAddress
+
+              'write at dynamically written location
+              WRITE jamDurationMapAddress, Word jamduration
+              'store jam duration
+
+              DEBUG "jamduration = " , DEC jamduration , CR
+              DEBUG "jamDurationMapAddress = " , DEC jamDurationMapAddress, CR
+
+              GOTO Start
+
+          ENDIF
+
+        LOOP UNTIL time > sensitivity
+
+
+
+    ENDIF
+
+
+LOOP

@@ -1,0 +1,12 @@
+' {$STAMP BS2}
+' {$PBASIC 2.5}
+ 'resets the memory locations for the conveyer belt.bs2
+
+  eepromaddress VAR Word
+
+  FOR eepromaddress = 0 TO 32 STEP 2
+      WRITE eepromaddress, Word 0
+  NEXT
+
+  'setting up jamduration address
+  WRITE 10, Word 12
