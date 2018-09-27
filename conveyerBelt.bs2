@@ -37,6 +37,13 @@ sensitivity = 500
 
 PAUSE 1000
 
+DEBUG "!AMAX 50", CR,
+         "!TMAX 25", CR,
+         "!TMIN 0", CR,
+         "!SHFT ON", CR,
+         "!RSET",CR
+
+
 Start:
 DO
    boxtime = 0
@@ -53,11 +60,7 @@ DO
 
    totalbox = box1 + box2 + box3 + box4
 
-   DEBUG "!AMAX 50", CR,
-         "!TMAX 25", CR,
-         "!TMIN 0", CR,
-         "!SHFT ON", CR,
-         "!RSET",CR
+
 
    'for graph
    DEBUG DEC totalbox , CR

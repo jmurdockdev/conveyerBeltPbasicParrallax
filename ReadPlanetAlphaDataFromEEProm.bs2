@@ -1,0 +1,24 @@
+' {$STAMP BS2}
+' {$PBASIC 2.5}
+
+time VAR Word
+address VAR Word
+
+PAUSE 1000
+
+'sending transmission back to earth!!!
+
+DEBUG "!AMAX 1000", CR,
+      "!TMAX 100", CR,
+      "!TMIN 0", CR,
+      "!SHFT ON", CR,
+      "!RSET",CR
+
+
+FOR address = 0 TO 192 STEP 2
+
+PAUSE 1000
+  READ address, Word time
+  DEBUG DEC time, CR
+
+NEXT

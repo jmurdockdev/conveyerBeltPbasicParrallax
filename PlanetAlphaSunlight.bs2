@@ -1,2 +1,21 @@
 ' {$STAMP BS2}
 ' {$PBASIC 2.5}
+
+
+time VAR Word
+address VAR Word
+
+PAUSE 1000
+' Record sunlight measurements from pbasic stamp
+' simulates 96 measurements over a 24 hour periond with 15 minute intervals
+
+FOR address = 0 TO 192 STEP 2
+
+  HIGH 2
+  PAUSE 10
+  RCTIME 2, 1, time
+  DEBUG DEC time, CR
+
+  WRITE address , Word time
+
+NEXT

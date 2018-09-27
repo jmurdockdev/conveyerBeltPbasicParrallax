@@ -4,9 +4,9 @@
 
   eepromaddress VAR Word
 
-  FOR eepromaddress = 0 TO 32 STEP 2
+  FOR eepromaddress = 0 TO 192 STEP 2
       WRITE eepromaddress, Word 0
   NEXT
 
   'setting up jamduration address
-  WRITE 10, Word 12
+  'WRITE 10, Word 12
