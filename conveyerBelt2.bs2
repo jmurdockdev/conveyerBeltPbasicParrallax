@@ -31,17 +31,17 @@ READ 6, Word box4
 ' is a box present or not
 ' Writing in word increments: so 2 words at a time
 
-'sensitivity VAR Word
-'sensitivity = 120
+sensitivity VAR Word
+sensitivity = 120
 
 
 PAUSE 1000
 
-'DEBUG "!AMAX 50", CR,
-'         "!TMAX 25", CR,
-'         "!TMIN 0", CR,
-'         "!SHFT ON", CR,
-'         "!RSET",CR
+DEBUG "!AMAX 50", CR,
+         "!TMAX 25", CR,
+         "!TMIN 0", CR,
+         "!SHFT ON", CR,
+         "!RSET",CR
 
 
 Start:
@@ -55,18 +55,18 @@ DO
 
    HIGH 2
    RCTIME 2,1, time
-   DEBUG HOME, "time =  " , DEC5 time, CR
+   'DEBUG HOME, "time =  " , DEC5 time, CR
    'DEBUG DEC $7DC
 
-  ' totalbox = box1 + box2 + box3 + box4
+   totalbox = box1 + box2 + box3 + box4
 
 
 
    'for graph
-   'DEBUG DEC totalbox , CR
+   DEBUG DEC totalbox , CR
 
                                                               'the dubug outputs slow down counting loops FYI
-   IF time > 120 THEN   'sensitivity                                     'claibrate light sensitivity for different rooms
+   IF time > sensitivity THEN                                        'claibrate light sensitivity for different rooms
 
       DO
           'PAUSE 1
@@ -100,49 +100,44 @@ DO
               WRITE jamDurationMapAddress, Word jamduration
               'store jam duration
 
-
-              DEBUG CR, "jamduration = " , DEC jamduration , CR
-              DEBUG "jamDurationMapAddress = " , DEC jamDurationMapAddress, CR
+              'DEBUG CR, "jamduration = " , DEC jamduration , CR
+              'DEBUG "jamDurationMapAddress = " , DEC jamDurationMapAddress, CR
 
               GOTO Start
 
           ENDIF
 
-      LOOP UNTIL time < 120 'sensitivity
+      LOOP UNTIL time < sensitivity
 
 
       '' LOGIC TO DEFINE AND STORE WHAT TYPE OF BOX IT IS
       IF boxtime <= 1500 AND boxtime >=500 THEN
           'STORE THE BOX TYPE1
-          'READ 0, Word box1
+          READ 0, Word box1
           box1 = box1 + 1
           WRITE 0 , Word box1
-
-          DEBUG "Number of box1 is  " , DEC box1 , CR
+          'DEBUG "Number of box1 is  " , DEC box1 , CR
 
       ELSEIF boxtime > 1500 AND boxtime < 2500 THEN
           'STORE THE BOX TYPE2
-          'READ 2, Word box2
+          READ 2, Word box2
           box2 = box2 + 1
           WRITE 2 , Word box2
-
-          DEBUG "Number of box2 is  " , DEC box2 , CR
+          'DEBUG "Number of box2 is  " , DEC box2 , CR
 
       ELSEIF boxtime > 2500 AND boxtime < 3500 THEN
           'STORE THE BOX TYPE3
-         ' READ 4, Word box3
+          READ 4, Word box3
           box3 = box3 + 1
           WRITE 4 , Word box3
-
-          DEBUG "Number of box3 is  " , DEC box3 , CR
+          'DEBUG "Number of box3 is  " , DEC box3 , CR
 
       ELSEIF boxtime > 3500 AND boxtime < 5000 THEN
           'STORE THE BOX TYPE4
-          'READ 6, Word box4
+          READ 6, Word box4
           box4 = box4 + 1
           WRITE 6 , Word box4
-
-          DEBUG "Number of box4 is  " , DEC box4 , CR
+          'DEBUG "Number of box4 is  " , DEC box4 , CR
 
       ENDIF
 
@@ -183,14 +178,14 @@ DO
               WRITE jamDurationMapAddress, Word jamduration
               'store jam duration
 
-              DEBUG CR, "jamduration = " , DEC jamduration , CR
-              DEBUG "jamDurationMapAddress = " , DEC jamDurationMapAddress, CR
+              'DEBUG "jamduration = " , DEC jamduration , CR
+              'DEBUG "jamDurationMapAddress = " , DEC jamDurationMapAddress, CR
 
               GOTO Start
 
           ENDIF
 
-        LOOP UNTIL time > 120 ' sensitivity
+        LOOP UNTIL time > sensitivity
 
 
 
